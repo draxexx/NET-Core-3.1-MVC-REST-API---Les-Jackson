@@ -1,0 +1,72 @@
+CREATING NEW PROJECT
+
+dotnet new //komutları listeler
+
+dotnet new webapi -n Commander //Commander isminde webapi projesi oluşturur
+
+code -r Commander //Commander isimli proje klasörünü açar
+
+dotnet new classlib -o business.entity //business.entity isminde klasör projesi oluşturur
+
+DATABASE
+
+Login Name: CommanderAPI
+Password: 123456
+Server Name: DESKTOP-O3BAFJ6\SQLEXPRESS
+
+ENTITY FRAMEWOKK
+
+nuget.org //paketleri buradan bulup yükleyebilirsin
+
+dotnet add package Microsoft.EntityFrameworkCore //entityframework paketinin son sürüm yükler
+
+dotnet add package Microsoft.EntityFrameworkCore.Design //design paketinin son sürüm yükler
+
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer //MSSQL paketinin son sürüm yükler
+
+dotnet tool install --global dotnet-ef //dotnet-ef aracını yükler
+
+CONNECTIONSTRINGS
+
+in appsettings.json file:
+
+//we can connect multiple databases
+
+"ConnectionStrings":
+  {
+    "CommanderConnection": "Server=DESKTOP-O3BAFJ6;Initial Catalog=CommanderDB;User ID=CommanderAPI;Password=123456;"
+  }
+  
+in Startup.cs file:
+
+//inside ConfigureServices method
+
+services.AddDbContext<CommanderContext>(opt=> opt.UseSqlServer(
+                Configuration.GetConnectionString("CommanderConnection")
+            )); //configured with ConnectionString
+			
+MIGRATIONS
+
+dotnet ef migrations add InitialMigration //migrations oluşturmak için
+
+dotnet ef migrations remove //migrations'ları siler
+
+dotnet ef database update //migrations'ları database'e yükler
+
+DEPENDENCY INJECTION
+
+dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection //AutoMapper.Extensions.Microsoft.DependencyInjection paketini yükler
+
+services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //automapper kullanmak için Startup.cs içerisinde tanımlıyoruz
+
+PATH
+
+dotnet add package Microsoft.AspNetCore.JsonPatch //path paketini yüklemek için
+
+dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson //newtonsoftJson paketi
+
+//for newtonsoftJson configuration in Startup.cs
+
+services.AddControllers().AddNewtonsoftJson(s=>{
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
